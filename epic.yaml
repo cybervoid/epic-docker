@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: epic
+  labels:
+    app: epic
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: epic
+  template:
+    metadata:
+      labels:
+        app: epic
+    spec:
+      containers:
+        - name: epic
+          image: "969105443985.dkr.ecr.us-east-1.amazonaws.com/epic:v1.0.0"
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          env:
+            - name: test
+          volumeMounts:
+          - name: foo
+            mountPath: "/etc/foo"
+            readOnly: true
+      volumes:
+        - name: foo
+          secret:
+            secretName: epic-dev
+          # resources:
+# {{ toYaml .Values.resources | indent 12 }}
+          # volumeMounts:
+          #   - name: data
+          #     mountPath: /data
+          #     {{- if .Values.persistence.subPath }}
+          #     subPath: "{{ .Values.persistence.subPath }}"
+          #     {{- end }}
+          #   - name: config
+          #     mountPath: /data/gogs/conf/app.ini
+          #     subPath: app.ini
+      # volumes:
+      #   - name: config
+      #     configMap:
+      #       name: {{ template "gogs.fullname" . }}-config
+      #   - name: data
+      # {{- if .Values.persistence.enabled }}
+      #     persistentVolumeClaim:
+      #     {{- if .Values.persistence.claimName }}
+      #       claimName: "{{ .Values.persistence.claimName }}"
+      #     {{- else }}
+      #       claimName: {{ template "gogs.fullname" . }}
+      #     {{- end }}
+      # {{- else }}
+      #     emptyDir: {}
+      # {{- end -}}
