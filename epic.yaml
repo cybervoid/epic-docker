@@ -24,14 +24,12 @@ spec:
             - name: http
               containerPort: 80
               protocol: TCP
-          env:
-            - name: test
           volumeMounts:
-          - name: foo
-            mountPath: "/etc/foo"
+          - name: env-file
+            mountPath: "/etc/epic"
             readOnly: true
       volumes:
-        - name: foo
+        - name: env-file
           secret:
             secretName: epic-dev
           # resources:
